@@ -1,6 +1,7 @@
 open Core.Std
 
 (* 1.1.1 *)
+
 let rec inS x =
   if x < 0 then false
   else if phys_equal x 0 then true
@@ -12,6 +13,7 @@ assert (phys_equal (inS 0) true);;
 assert (phys_equal (inS 3) true);;
 
 (* 1.2.1 *)
+
 let rec list_length = function
   | [] -> 
     0
@@ -70,7 +72,6 @@ let rec remove_first elem lst =
 ;;
 
 (* e1.9 *)
-
 let rec remove elem lst =
   match lst with
   [] ->
