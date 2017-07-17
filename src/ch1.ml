@@ -1,23 +1,15 @@
 open Core.Std
 
 (* 1.1.1 *)
-(* int -> bool *)
 let rec inS x =
-  if x < 0
-  then false
-  else if x == 0
-  then true
+  if x < 0 then false
+  else if phys_equal x 0 then true
   else inS(x - 3)
 ;;
 
-assert (inS(-2) != false);;
-assert (inS(-3) == false);;
-assert (inS(-1) == false);;
-assert (inS(0) == true);;
-assert (inS(1) == false);;
-assert (inS(2) == false);;
-assert (inS(3) == true);;
-assert (inS(6) == true);;
+assert (phys_equal (inS (-3)) false);;
+assert (phys_equal (inS 0) true);;
+assert (phys_equal (inS 3) true);;
 
 (* 1.2.1 *)
 let rec list_length = function
@@ -31,36 +23,39 @@ exception Exn of string
 ;;
 
 (* 1.2.2 *)
-(* e1.6 *)
 
+(* e1.6 *)
 let string_of_list lst =
-  let rec str_lst = function
+  let rec lst_str = function
       | [] ->
         ""
       | x::xs ->
-        string_of_int x ^ "; " ^ str_lst xs
+        string_of_int x ^ "; " ^ lst_str xs
 
-  and trim_end inner =
-    let len = String.length inner in
-      if len < 2 then inner
-      else String.slice inner 0 (len - 2)
+  and trim_end elems_str =
+    let len = String.length elems_str in
+      if len < 2 then elems_str
+      else String.slice elems_str 0 (len - 2)
 
   in
-    "[" ^ (lst |> str_lst |> trim_end) ^ "]"
+    "[" ^ (lst |> lst_str |> trim_end) ^ "]"
 ;;
 
 let nth lst n =
-  let rec inner_nth lst n =
+  let rec nth' lst n =
     match lst with
     | [] ->
       raise err
     | x::xs ->
-      if phys_equal n 0 then x else inner_nth xs (n - 1)
+      if phys_equal n 0 then x else nth' xs (n - 1)
 
-  and err = Exn (Printf.sprintf "list %s doesn't have %d elements." (string_of_list lst) n)
+  and err = Exn (
+    Printf.sprintf  "list %s doesn't have %d elements."
+                    (string_of_list lst) n
+  )
 
   in
-    inner_nth lst n
+    nth' lst n
 ;;
 
 (* 1.2.3 *)
@@ -68,9 +63,9 @@ let nth lst n =
 let rec remove_first elem lst =
   match lst with
   | [] ->
-    raise Exn "Error"
+    raise (Exn "Error")
   | x::xs ->
-    if x == elem then xs
+    if phys_equal x elem then xs
     else x::(remove_first elem xs)
 ;;
 
