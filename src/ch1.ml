@@ -4,13 +4,13 @@ open Core.Std
 
 let rec inS x =
   if x < 0 then false
-  else if phys_equal x 0 then true
+  else if x = 0 then true
   else inS(x - 3)
 ;;
 
-assert (phys_equal (inS (-3)) false);;
-assert (phys_equal (inS 0) true);;
-assert (phys_equal (inS 3) true);;
+assert ((inS (-3)) = false);;
+assert ((inS 0) = true);;
+assert ((inS 3) = true);;
 
 (* 1.2.1 *)
 
@@ -49,7 +49,7 @@ let nth lst n =
     | [] ->
       raise err
     | x::xs ->
-      if phys_equal n 0 then x else nth' xs (n - 1)
+      if n = 0 then x else nth' xs (n - 1)
 
   and err = Exn (
     Printf.sprintf  "list %s doesn't have %d elements."
@@ -67,7 +67,7 @@ let rec remove_first elem lst =
   | [] ->
     raise (Exn "Error")
   | x::xs ->
-    if phys_equal x elem then xs
+    if x = elem then xs
     else x::(remove_first elem xs)
 ;;
 
@@ -77,7 +77,7 @@ let rec remove elem lst =
   [] ->
     []
   | x::xs ->
-    if phys_equal x elem then remove elem xs
+    if x = elem then remove elem xs
     else x::(remove elem xs)
 ;;
 
