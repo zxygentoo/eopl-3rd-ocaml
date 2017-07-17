@@ -28,19 +28,19 @@ exception Exn of string
 
 (* e1.6 *)
 let string_of_list lst =
-  let rec lst_str = function
+  let rec string_of_list' = function
       | [] ->
         ""
       | x::xs ->
-        string_of_int x ^ "; " ^ lst_str xs
+        string_of_int x ^ "; " ^ string_of_list' xs
 
-  and trim_end elems_str =
-    let len = String.length elems_str in
-      if len < 2 then elems_str
-      else String.slice elems_str 0 (len - 2)
+  and trim_end lst_str =
+    let len = String.length lst_str in
+      if len < 2 then lst_str
+      else String.slice lst_str 0 (len - 2)
 
   in
-    "[" ^ (lst |> lst_str |> trim_end) ^ "]"
+    "[" ^ (lst |> string_of_list' |> trim_end) ^ "]"
 ;;
 
 let nth lst n =
