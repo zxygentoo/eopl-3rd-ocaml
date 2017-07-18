@@ -2,15 +2,19 @@ open Core.Std
 
 (* 1.1.1 *)
 
-let rec inS x =
-  if x < 0 then false
-  else if x = 0 then true
-  else inS(x - 3)
+let rec in_s x =
+  match x with
+  x when x < 0 ->
+    false
+  | 0 ->
+    true
+  | _ ->
+    in_s(x - 3)
 ;;
 
-assert ((inS (-3)) = false);;
-assert ((inS 0) = true);;
-assert ((inS 3) = true);;
+assert (in_s (-3) = false);;
+assert (in_s 0 = true);;
+assert (in_s 3 = true);;
 
 (* 1.2.1 *)
 
@@ -65,7 +69,7 @@ let nth lst n =
 let rec remove_first elem lst =
   match lst with
   | [] ->
-    raise (Exn "Error")
+    raise (Exn "Element not in list.")
   | x::xs ->
     if x = elem then xs
     else x::(remove_first elem xs)
