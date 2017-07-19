@@ -39,9 +39,11 @@ let string_of_list lst =
         string_of_int x ^ "; " ^ string_of_list' xs
 
   and trim_end lst_str =
-    let len = String.length lst_str in
-      if len < 2 then lst_str
-      else String.slice lst_str 0 (len - 2)
+    match String.length lst_str with
+    | len when len < 2 ->
+      lst_str
+    | len ->
+      String.slice lst_str 0 (len - 2)
 
   in
     "[" ^ (lst |> string_of_list' |> trim_end) ^ "]"
@@ -52,9 +54,11 @@ let nth lst n =
     match lst with
     | [] ->
       raise err
+    | x::xs when n = 0 ->
+      x 
     | x::xs ->
-      if n = 0 then x else nth' xs (n - 1)
-
+      nth' xs (n - 1)
+  
   and err = Exn (
     Printf.sprintf  "list %s doesn't have %d elements."
                     (string_of_list lst) n
@@ -70,9 +74,10 @@ let rec remove_first elem lst =
   match lst with
   | [] ->
     raise (Exn "Element not in list.")
+  | x::xs when x = elem ->
+    xs
   | x::xs ->
-    if x = elem then xs
-    else x::(remove_first elem xs)
+    x::(remove_first elem xs)
 ;;
 
 (* e1.9 *)
@@ -80,9 +85,10 @@ let rec remove elem lst =
   match lst with
   [] ->
     []
+  | x::xs when x = elem ->
+    remove elem xs
   | x::xs ->
-    if x = elem then remove elem xs
-    else x::(remove elem xs)
+    x::(remove elem xs)
 ;;
 
 (* 1.2.4 *)
@@ -125,6 +131,10 @@ and s_list =
   | List of s_exp * s_list
 ;;
 
+let l1 = Empty;;
+let l2 = List ((Symbol "a"), Empty);;
+let l3 = List ((Symbol "b"), l2);;
+
 let subst sym_new sym_old slst =
   let rec subst_lst = function
     | Empty ->
@@ -133,8 +143,10 @@ let subst sym_new sym_old slst =
       List (subst_exp expr, subst_lst lst)
 
   and subst_exp = function
+    | (Symbol s) as sym when sym = sym_old ->
+      sym_new
     | (Symbol s) as sym ->
-      if sym = sym_old then sym_new else sym
+      sym
     | SList lst ->
       SList (subst_lst lst)
   in
@@ -185,10 +197,12 @@ let swapper sym1 sym2 slst =
       List (swap_exp expr, swap_lst lst)
 
   and swap_exp = function
+    | (Symbol _) as sym when sym = sym2 ->
+      sym1
+    | (Symbol _) as sym when sym = sym1 ->
+      sym2
     | (Symbol _) as sym ->
-      if sym = sym2 then sym1
-      else if sym = sym1 then sym2
-      else sym
+      sym
     | SList lst ->
       SList (swap_lst lst)
   in
@@ -201,9 +215,10 @@ let list_set lst index item =
     match l2 with
     | [] ->
       l1
+    | x::xs when n = 0 ->
+      List.append l1 (item::xs)
     | x::xs ->
-      if n = 0 then List.append l1 (item::xs)
-      else list_set_aux (n - 1) (List.append l1 [x]) xs
+      list_set_aux (n - 1) (List.append l1 [x]) xs
   in
     list_set_aux index [] lst
 ;;
@@ -223,9 +238,10 @@ let rec item_in_bst item tree =
   match tree with
   | Empty ->
     false
+  | Tree (i, left, right) when i = item ->
+    true
   | Tree (i, left, right) ->
-    if i = item then true
-    else item_in_bst item left || item_in_bst item right
+    item_in_bst item left || item_in_bst item right
 ;;
 
 let path item tree =
@@ -233,14 +249,14 @@ let path item tree =
     match subtree with
     | Empty ->
       []
-    | Tree (i, left, right) ->
-      if i = item then
+    | Tree (i, left, right) when i = item ->
         current_path
-      else if (item_in_bst item left) then
+    | Tree (i, left, right) when (item_in_bst item left) ->
         path_aux (List.cons Left current_path) left
-      else if (item_in_bst item right) then
+    | Tree (i, left, right) when (item_in_bst item right) ->
         path_aux (List.cons Right current_path) right
-      else []
+    | Tree (i, left, right) ->
+      []
   in
     List.rev (path_aux [] tree)
 ;;
