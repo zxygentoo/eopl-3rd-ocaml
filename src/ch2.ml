@@ -27,12 +27,10 @@ struct
     match n with
     | [] ->
       [1]
-
     | [a] when a = step - 1 ->
       [0; 1]
     | [a] ->
       [a + 1]
-    
     | x::xs when x = step - 1 ->
       0::successor(xs)
     | x::xs ->
@@ -72,11 +70,7 @@ let is_zero = Bigit.is_zero;;
 let pred = Bigit.predecessor;;
 let succ = Bigit.successor;;
 let one = succ zero;;
-
-let is_one x =
-  Bigit.is_zero (Bigit.predecessor x)
-;;
-
+let is_one x = Bigit.is_zero (Bigit.predecessor x);;
 
 let rec add x y =
   match x, y with
