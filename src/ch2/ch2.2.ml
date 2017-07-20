@@ -17,10 +17,18 @@ end = struct
     a::s
 
   let pop s =
-    List.hd s , List.tl s
+    match s with
+    | [] ->
+      failwith "Empty stack."
+    | x::xs ->
+      x, xs
 
   let top s =
-    List.hd s
+    match s with
+    | [] ->
+      failwith "Empty stack."
+    | x::xs ->
+      x
 
   let is_empty s =
     s = []
@@ -113,7 +121,7 @@ assert (
 );;
 
 
-(* e2.13 *)
+(* eg2.2.1 *)
 
 module ProcEnv : sig
   type env = (string * int) list
@@ -151,5 +159,56 @@ end = struct
 end
 ;;
 
-(* e2.2 *)
+(* e2.12 *)
 
+module ProcStack : sig
+  type 'a stack = 'a list
+  val pop : 'a stack -> unit -> 'a * 'a stack
+  val empty : unit -> 'a * 'a list
+  val push : 'a -> 'a stack -> (unit -> ('a * 'a stack))
+  val top : 'a stack -> unit -> 'a
+
+end = struct
+  type 'a stack = 'a list
+
+  let pop'' s =
+    match s with
+    | [] ->
+      None
+    | x::xs ->
+      Some (x, xs)
+
+  let pop' s =
+    match pop'' s with
+    | None ->
+      failwith "Empty stack."
+    | Some (x, xs) ->
+      x, xs
+
+  let top' s =
+    let (x, _) = pop' s in x
+
+  let pop s =
+    fun () -> pop' s
+
+  let empty =
+    fun () -> pop' []
+
+  let push a s =
+    fun () -> pop' (a::s)
+
+  let top s =
+    fun () -> top' s
+
+end
+;;
+
+(* test *)
+
+(ProcStack.empty) ();;
+(ProcStack.pop []) ();;
+(ProcStack.pop [42]) ();;
+(ProcStack.pop [42; 43]) ();;
+(ProcStack.push 42 []) ();;
+(ProcStack.top []) ();;
+(ProcStack.top [42]) ();;
