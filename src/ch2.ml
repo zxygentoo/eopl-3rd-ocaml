@@ -1,8 +1,9 @@
 (* e2.1 *)
 
 module Bigit : sig
+  type bigit = int list
+
   (* interfaces *)
-  type bigit
   val zero : bigit
   val is_zero : bigit -> bool
   val succ : bigit -> bigit
@@ -15,7 +16,6 @@ module Bigit : sig
 
   (* helpers *)
   val of_int : int -> bigit
-  val inspect : bigit -> bigit
 
 end = struct
   type bigit = int list
@@ -32,8 +32,6 @@ end = struct
     match n with
     | [] ->
       [1]
-    | [x;] ->
-      if x = step - 1 then 0::[1] else [x + 1]
     | x::xs ->
       if x = step - 1 then 0 :: succ xs else x + 1 :: xs
 
@@ -41,13 +39,13 @@ end = struct
     match n with
     | [] ->
       failwith "Zero has no pred."
-    | [x;] ->
-      if x = 1 then [] else [x-1]
+    | [x] ->
+      if x = 1 then [] else [x - 1]
     | [x;y] -> (
       match x, y with
       | 0, 1    -> [step - 1]
-      | 0, y'   -> [step - 1; y'-1]
-      | x', y'  -> [x' - 1; y'-1]
+      | 0, y'   -> [step - 1; y' - 1]
+      | x', y'  -> [x' - 1; y']
     )
     | x::xs ->
       if x = 0 then step - 1 :: pred xs else x - 1 :: xs
@@ -93,13 +91,6 @@ end = struct
     | x ->
       add one (of_int (i - 1))
 
-  let to_list n =
-    n
-  
-  let inspect n =
-    List.iter (Printf.printf "%d;") (to_list n);
-    n
-
 end
 ;;
 
@@ -114,7 +105,6 @@ assert (
   |> Bigit.of_int
   |> Bigit.succ |> Bigit.pred |> Bigit.succ |> Bigit.succ
   |> Bigit.fact
-  |> Bigit.inspect
   =
   (Bigit.zero |> Bigit.succ |> Bigit.succ)
 );;
