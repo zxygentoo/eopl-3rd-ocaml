@@ -30,7 +30,7 @@ end = struct
     | Diff of prefix_exp * prefix_exp
 
   let rec parse_one lst =
-    let parse_minus_continue cont_lst =
+    let parse_one_more cont_lst =
       match parse_one cont_lst with
       | None, _ ->
         failwith "Invalid expression."
@@ -43,8 +43,8 @@ end = struct
       | Num n :: xs ->
         Some (Const n), xs
       | Minus :: xs ->
-        let e', xs' = parse_minus_continue xs; in
-        let e'', xs'' = parse_minus_continue xs' in
+        let e', xs' = parse_one_more xs; in
+        let e'', xs'' = parse_one_more xs' in
         Some (Diff (e', e'')), xs''
 
   let rec parse lst =
@@ -61,22 +61,34 @@ end
 
 (* tests *)
 
+(* () *)
 let e0 = []
-let e1 = [Polish.Num 42; Polish.Num 41];;
-let e2 = [Polish.Minus; Polish.Num 42; Polish.Num 41];;
-let e3 = [Polish.Minus; Polish.Minus; Polish.Num 42; Polish.Num 41; Polish.Num 40];;
+(* (42) *)
+let e1 = [Polish.Num 42];;
+(* (42 41) *)
+let e2 = [Polish.Num 42; Polish.Num 41];;
+(* (- 42 41) *)
+let e3 = [Polish.Minus; Polish.Num 42; Polish.Num 41];;
+(* (- 42 41 40) *)
 let e4 = [
+  Polish.Minus; Polish.Minus; Polish.Num 42; Polish.Num 41; Polish.Num 40
+];;
+(* (- - 3 2 - 4 - 12 7) *)
+let e5 = [
   Polish.Minus; Polish.Minus; Polish.Num 3; Polish.Num 2; Polish.Minus;
   Polish.Num 4; Polish.Minus; Polish.Num 12; Polish.Num 7
-];;     (* (- - 3 2 - 4 - 12 7) *)
+];;
 
 Polish.parse_one e0;;
 Polish.parse_one e1;;
 Polish.parse_one e2;;
 Polish.parse_one e3;;
 Polish.parse_one e4;;
+Polish.parse_one e5;;
 
+Polish.parse e0;;
 Polish.parse e1;;
 Polish.parse e2;;
 Polish.parse e3;;
 Polish.parse e4;;
+Polish.parse e5;;
