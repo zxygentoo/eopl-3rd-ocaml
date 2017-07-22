@@ -30,7 +30,7 @@ end = struct
   let rec parse_one lst =
     match lst with
     | [] ->
-      failwith "Bad parse."
+      failwith "Invalid expressoin."
     | Num n :: xs ->
       Const n, xs
     | Minus :: xs ->
@@ -46,41 +46,43 @@ end = struct
       | e, xs ->
         parse_aux (e::acc) xs
     in
-      parse_aux [] lst
+      if lst = [] then [] else parse_aux [] lst
 
 end
 ;;
 
 (* tests *)
 
+open Polish
+
 (* () *)
 let e0 = []
 (* (42) *)
-let e1 = [Polish.Num 42];;
+let e1 = [Num 42];;
 (* (42 41) *)
-let e2 = [Polish.Num 42; Polish.Num 41];;
+let e2 = [Num 42; Num 41];;
 (* (- 42 41) *)
-let e3 = [Polish.Minus; Polish.Num 42; Polish.Num 41];;
+let e3 = [Minus; Num 42; Num 41];;
 (* (- 42 41 40) *)
 let e4 = [
-  Polish.Minus; Polish.Minus; Polish.Num 42; Polish.Num 41; Polish.Num 40
+  Minus; Minus; Num 42; Num 41; Num 40
 ];;
 (* (- - 3 2 - 4 - 12 7) *)
 let e5 = [
-  Polish.Minus; Polish.Minus; Polish.Num 3; Polish.Num 2; Polish.Minus;
-  Polish.Num 4; Polish.Minus; Polish.Num 12; Polish.Num 7
+  Minus; Minus; Num 3; Num 2; Minus;
+  Num 4; Minus; Num 12; Num 7
 ];;
 
-Polish.parse_one e0;;
-Polish.parse_one e1;;
-Polish.parse_one e2;;
-Polish.parse_one e3;;
-Polish.parse_one e4;;
-Polish.parse_one e5;;
+parse_one e0;;
+parse_one e1;;
+parse_one e2;;
+parse_one e3;;
+parse_one e4;;
+parse_one e5;;
 
-Polish.parse e0;;
-Polish.parse e1;;
-Polish.parse e2;;
-Polish.parse e3;;
-Polish.parse e4;;
-Polish.parse e5;;
+parse e0;;
+parse e1;;
+parse e2;;
+parse e3;;
+parse e4;;
+parse e5;;
