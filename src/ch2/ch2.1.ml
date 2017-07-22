@@ -96,15 +96,11 @@ end
 
 (* tests *)
 
-assert (Bigit.is_zero Bigit.zero = true);;
-assert (Bigit.zero |> Bigit.succ |> Bigit.pred = Bigit.zero);;
-Bigit.zero |> Bigit.pred;;
-assert (Bigit.add Bigit.zero (Bigit.succ Bigit.zero) = Bigit.succ Bigit.zero);;
+open Bigit;;
+
+assert (is_zero zero = true);;
+assert (zero |> succ |> pred = zero);;
+assert (add zero (succ zero) = succ zero);;
 assert (
-  0
-  |> Bigit.of_int
-  |> Bigit.succ |> Bigit.pred |> Bigit.succ |> Bigit.succ
-  |> Bigit.fact
-  =
-  (Bigit.zero |> Bigit.succ |> Bigit.succ)
+  of_int 0 |> succ |> pred |> succ |> succ |> fact = (zero |> succ |> succ)
 );;

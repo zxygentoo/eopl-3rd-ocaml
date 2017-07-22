@@ -53,7 +53,7 @@ end
 
 (* tests *)
 
-open Polish
+open Polish;;
 
 (* () *)
 let e0 = []
