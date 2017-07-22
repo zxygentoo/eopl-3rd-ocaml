@@ -9,52 +9,44 @@
 (* e2.31 *)
 
 module Polish : sig
-  type expr =
+  type token =
     | Num of int
     | Minus
-  type prefix_list = expr list
-  type prefix_exp =
+  type exp =
     | Const of int
-    | Diff of prefix_exp * prefix_exp
+    | Diff of exp * exp
 
-  val parse_one : prefix_list -> prefix_exp option * prefix_list  
-  val parse : prefix_list -> prefix_exp
+  val parse_one : token list -> exp * (token list)
+  val parse : token list -> exp list
 
 end = struct
-  type expr =
+  type token =
     | Num of int
     | Minus
-  type prefix_list = expr list
-  type prefix_exp =
+  type exp =
     | Const of int
-    | Diff of prefix_exp * prefix_exp
+    | Diff of exp * exp
 
   let rec parse_one lst =
-    let parse_one_more cont_lst =
-      match parse_one cont_lst with
-      | None, _ ->
-        failwith "Invalid expression."
-      | Some e, rem ->
-        e, rem
+    match lst with
+    | [] ->
+      failwith "Bad parse."
+    | Num n :: xs ->
+      Const n, xs
+    | Minus :: xs ->
+      let e1, xs1 = parse_one xs in
+      let e2, xs2 = parse_one xs1 in
+      Diff (e1, e2), xs2
 
-    in match lst with
-      | [] ->
-        None, []
-      | Num n :: xs ->
-        Some (Const n), xs
-      | Minus :: xs ->
-        let e', xs' = parse_one_more xs; in
-        let e'', xs'' = parse_one_more xs' in
-        Some (Diff (e', e'')), xs''
-
-  let rec parse lst =
-    match parse_one lst with
-    | None, _ ->
-      failwith "Invalid expression."
-    | Some e, [] ->
-      e
-    | Some e, x::xs ->
-      failwith "Invaid expression."
+  let parse lst =
+    let rec parse_aux acc lst =
+      match parse_one lst with
+      | e, [] ->
+        List.rev (e::acc)
+      | e, xs ->
+        parse_aux (e::acc) xs
+    in
+      parse_aux [] lst
 
 end
 ;;
