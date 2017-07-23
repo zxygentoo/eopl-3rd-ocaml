@@ -135,7 +135,10 @@ let exp2 = Sub (Num 55, Sub (Ident "x", Num 11));;
 let exp3 = IF ((IsZero (Num 0)), exp1, exp2);;
 let exp4 = IF ((IsZero (Num 1)), exp1, exp2);;
 
-assert (value_of exp1 Env.empty_env = Int 44);;
-assert (value_of exp2 (Env.extend_env "x" (Int 99) Env.empty_env) = Int (-33));;
-assert (value_of exp3 (Env.extend_env "x" (Int 99) Env.empty_env) = Int 44);;
-assert (value_of exp4 (Env.extend_env "x" (Int 99) Env.empty_env) = Int (-33));;
+let env1 = Env.empty_env;;
+let env2 = (Env.extend_env "x" (Int 99) Env.empty_env);;
+
+assert (value_of exp1 env1 = Int 44);;
+assert (value_of exp2 env2 = Int (-33));;
+assert (value_of exp3 env2 = Int 44);;
+assert (value_of exp4 env2 = Int (-33));;
