@@ -36,8 +36,8 @@ end = struct
     | Some v ->
       v
 
-	(*  
-	let has_binding s env =
+  (*  
+  let has_binding s env =
     match search_var s env with
     | None ->
       false
@@ -70,8 +70,8 @@ type program = Prog of exp
 
 (* all possible values in LET language *)
 type value =
-	| Int of int
-	| Bool of bool
+  | Int of int
+  | Bool of bool
 ;;
 
 (* expressed value *)
@@ -94,38 +94,38 @@ let bool_val x = Bool x
 ;;
 
 let val_to_num =
-	function
-	| Int n -> n
-	| _ -> raise Invalid
+  function
+  | Int n -> n
+  | _ -> raise Invalid
 ;;
 
 let val_to_bool =
-	function
-	| Bool x -> x
-	| _ -> raise Invalid
+  function
+  | Bool x -> x
+  | _ -> raise Invalid
 ;;
 
 let rec value_of expr env =
-	match expr with
-		| Num i ->
-			Int i
+  match expr with
+    | Num i ->
+      Int i
 
-		| Sub (exp1, exp2) ->
-			Int (val_to_num (value_of exp1 env) - val_to_num (value_of exp2 env))
+    | Sub (exp1, exp2) ->
+      Int (val_to_num (value_of exp1 env) - val_to_num (value_of exp2 env))
 
-		| IsZero exp ->
-			Bool (val_to_num (value_of exp env) = 0)
+    | IsZero exp ->
+      Bool (val_to_num (value_of exp env) = 0)
 
-		| IF (pred_exp, then_exp, else_exp) ->
-			if val_to_bool (value_of pred_exp env)
-			then value_of then_exp env
-			else value_of else_exp env
+    | IF (pred_exp, then_exp, else_exp) ->
+      if val_to_bool (value_of pred_exp env)
+      then value_of then_exp env
+      else value_of else_exp env
 
-		| Ident id ->
-			Env.apply_env id env
+    | Ident id ->
+      Env.apply_env id env
 
-		| LetExp (id, exp1, exp2) ->
-			value_of exp2 (Env.extend_env id (value_of exp1 env) env)
+    | LetExp (id, exp1, exp2) ->
+      value_of exp2 (Env.extend_env id (value_of exp1 env) env)
 ;;
 
 (* tests *)
