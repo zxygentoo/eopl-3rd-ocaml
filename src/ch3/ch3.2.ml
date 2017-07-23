@@ -107,25 +107,25 @@ let val_to_bool =
 
 let rec value_of expr env =
   match expr with
-    | Num i ->
-      Int i
+  | Num i ->
+    Int i
 
-    | Sub (exp1, exp2) ->
-      Int (val_to_num (value_of exp1 env) - val_to_num (value_of exp2 env))
+  | Sub (exp1, exp2) ->
+    Int (val_to_num (value_of exp1 env) - val_to_num (value_of exp2 env))
 
-    | IsZero exp ->
-      Bool (val_to_num (value_of exp env) = 0)
+  | IsZero exp ->
+    Bool (val_to_num (value_of exp env) = 0)
 
-    | IF (pred_exp, then_exp, else_exp) ->
-      if val_to_bool (value_of pred_exp env)
-      then value_of then_exp env
-      else value_of else_exp env
+  | IF (pred_exp, then_exp, else_exp) ->
+    if val_to_bool (value_of pred_exp env)
+    then value_of then_exp env
+    else value_of else_exp env
 
-    | Ident id ->
-      Env.apply_env id env
+  | Ident id ->
+    Env.apply_env id env
 
-    | LetExp (id, exp1, exp2) ->
-      value_of exp2 (Env.extend_env id (value_of exp1 env) env)
+  | LetExp (id, exp1, exp2) ->
+    value_of exp2 (Env.extend_env id (value_of exp1 env) env)
 ;;
 
 (* tests *)
