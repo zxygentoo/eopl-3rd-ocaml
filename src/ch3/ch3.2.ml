@@ -133,7 +133,9 @@ let rec value_of expr env =
 let exp1 = Sub (Num 55, Sub (Num 22, Num 11));;
 let exp2 = Sub (Num 55, Sub (Ident "x", Num 11));;
 let exp3 = IF ((IsZero (Num 0)), exp1, exp2);;
+let exp4 = IF ((IsZero (Num 1)), exp1, exp2);;
 
-value_of exp1 Env.empty_env;;
-value_of exp2 (Env.extend_env "x" (Int 99) Env.empty_env);;
-value_of exp3 (Env.extend_env "x" (Int 99) Env.empty_env);;
+assert (value_of exp1 Env.empty_env = Int 44);;
+assert (value_of exp2 (Env.extend_env "x" (Int 99) Env.empty_env) = Int (-33));;
+assert (value_of exp3 (Env.extend_env "x" (Int 99) Env.empty_env) = Int 44);;
+assert (value_of exp4 (Env.extend_env "x" (Int 99) Env.empty_env) = Int (-33));;
