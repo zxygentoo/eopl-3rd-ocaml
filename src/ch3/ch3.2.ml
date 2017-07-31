@@ -191,23 +191,10 @@ let env2 = (Env.extend_env "x" (Int 99) Env.empty_env);;
 value_of (GT ((Num 1), (Num 2))) env0;;
 value_of (GT ((Num 2), (Num 1))) env0;;
 
-(* 
-[env : a -> 3]
-let x = 2 * a in x + 1
-*)
-
-value_of (
-  LetExp (
-    "x",
-    Mul (
-      Num (2),
-      Ident ("a")
-    ),
-    Add (
-      Ident ("x"),
-      Num (1)
-    )
-  )
-)
-(Env.extend_env "a" (Int 3) Env.empty_env)
+(* [env : a -> 3] let x = 2 * a in x + 1 => Int 7*)
+value_of  (LetExp (
+            "x",
+            Mul (Num (2), Ident ("a")),
+            Add (Ident ("x"), Num (1))))
+          (Env.extend_env "a" (Int 3) Env.empty_env)
 ;;
