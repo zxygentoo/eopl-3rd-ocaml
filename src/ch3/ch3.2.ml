@@ -109,45 +109,39 @@ end = struct
     | _ -> raise Invalid
 
   let rec value_of expr env =
-    let exp_to_int expr =
-      val_to_num (value_of expr env)
-    in
-
-    let int_compare expr1 expr2 f =
+    let int_binary_op expr1 expr2 f =
       let v1 = value_of expr1 env in
       let v2 = value_of expr2 env
       in match v1, v2 with
-      | Int x, Int y -> Bool (f x y)
+      | Int x, Int y -> f x y
       | _ -> raise Invalid
-    in
-    
-    match expr with
+    in match expr with
     | Num i ->
       Int i
 
     | Add (exp1, exp2) ->
-      Int (exp_to_int exp1 + exp_to_int exp2)
+      Int (int_binary_op exp1 exp2 (+))
 
     | Sub (exp1, exp2) ->
-      Int (exp_to_int exp1 - exp_to_int exp2)
+      Int (int_binary_op exp1 exp2 (-))
 
     | Mul (exp1, exp2) ->
-      Int (exp_to_int exp1 * exp_to_int exp2)
+      Int (int_binary_op exp1 exp2 ( * ))
 
     | Div (exp1, exp2) ->
-      Int (exp_to_int exp1 / exp_to_int exp2)
+      Int (int_binary_op exp1 exp2 (/))
 
     | IsZero exp ->
       Bool (val_to_num (value_of exp env) = 0)
 
     | EQ (exp1, exp2) ->
-      int_compare exp1 exp2 (=)
+      Bool (int_binary_op exp1 exp2 (=))
     
     | LT (exp1, exp2) ->
-      int_compare exp1 exp2 (<)
+      Bool (int_binary_op exp1 exp2 (<))
 
     | GT (exp1, exp2) ->
-      int_compare exp1 exp2 (>)
+      Bool (int_binary_op exp1 exp2 (>))
 
     | IF (pred_exp, then_exp, else_exp) ->
       if val_to_bool (value_of pred_exp env)
@@ -158,9 +152,7 @@ end = struct
       Env.apply_env id env
 
     | LetExp (var_name, var_exp, body_exp) ->
-      let new_env =
-        Env.extend_env var_name (value_of var_exp env) env
-      in
+      let new_env = Env.extend_env var_name (value_of var_exp env) env in
       value_of body_exp new_env
 
 end
