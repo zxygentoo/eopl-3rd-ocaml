@@ -122,7 +122,7 @@ open FunLang ;;
 (*
   let f = proc (x) -(x,11)
   in (f (f 77)) 
-  ==> 55
+  ==> Int 55
 *)
 let e = Let (
   "f",
@@ -134,9 +134,11 @@ in
 ;;
 
 (* 
-  (proc (f) (f (f 77))
-  proc (x) -(x, 11))
-  ==> 55
+  (
+    proc (f) (f (f 77))
+    proc (x) -(x, 11)
+  )
+  ==> Int 55
 *)
 let f = Fn ("f", App (Id "f", App (Id "f", Num 77)), Env.empty_env) in
 let g = Fn ("x", Sub (Id "x", Num 11), Env.empty_env) in
