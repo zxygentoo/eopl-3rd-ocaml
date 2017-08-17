@@ -130,7 +130,8 @@ let e = Let (
   App (Id "f", App (Id "f", Num 77))
 )
 in 
-  (assert (eval e Env.empty_env = Int 55)) ;;
+  (assert (eval e Env.empty_env = Int 55))
+;;
 
 (* 
   (proc (f) (f (f 77))
@@ -145,4 +146,5 @@ let env =
   |> Env.extend_env "f" f
   |> Env.extend_env "g" g
 in
-  (assert (eval e env = Int 55)) ;;
+  (assert (eval e env = Int 55))
+;;
