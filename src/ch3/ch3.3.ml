@@ -134,9 +134,9 @@ in
 
 (* 
   (proc (f) (f (f 77))
-   proc (x) -(x, 11))
-   ==> 55
- *)
+  proc (x) -(x, 11))
+  ==> 55
+*)
 let f = Fn ("f", App (Id "f", App (Id "f", Num 77)), Env.empty_env) in
 let g = Fn ("x", Sub (Id "x", Num 11), Env.empty_env) in
 let e = App (Id "f", Id "g") in
