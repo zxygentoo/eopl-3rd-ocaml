@@ -31,10 +31,10 @@ end = struct
   let apply_env s env =
     if is_empty_env env then failwith "Empty enviroment."
     else match search_var s env with
-    | None ->
-      failwith "Enviroment has no binding for variable."      
-    | Some v ->
-      v
+      | None ->
+        failwith "Enviroment has no binding for variable."      
+      | Some v ->
+        v
 end
 ;;
 
@@ -61,7 +61,7 @@ module FunLang : sig
     | Int of int
     | Bool of bool
     | Fn of id * exp * value Env.t
-  
+
   val eval : exp -> value Env.t -> value
 
 end = struct
@@ -107,7 +107,7 @@ end = struct
       let ev e = eval e env in
       Int (op (int_of_val (ev e1)) (int_of_val (ev e2)))
     in
-  
+
     let apply_fn rator rand env =
       let fn = eval rator env in
       let arg = eval rand env in
@@ -116,7 +116,7 @@ end = struct
         let new_env = Env.extend_env var arg saved_env in
         eval body new_env
       in
-        apply fn arg
+      apply fn arg
     in
 
     match exp with
@@ -154,22 +154,12 @@ end = struct
       let v = eval bind env in
       let new_env = Env.extend_env var v env in
       eval body new_env
-    
+
     | Fun (var, body) ->
       Fn (var, body, env)
-    
+
     | App (rator, rand) ->
       apply_fn rator rand env
-
-      (* let fn = eval rator env in
-      let arg = eval rand env in
-      let apply fn arg =
-        let var, body, old_env = fn_of_val fn in
-        let new_env = Env.extend_env var arg old_env in
-        eval body new_env
-      in
-      apply fn arg
- *)
 
 end
 ;;
@@ -182,21 +172,21 @@ module FunLangTest = struct
 
   (* let f = proc (x) -(x,11) in (f (f 77)) ==> Int 55 *)
   let exp1 = Let (
-    "f",
-    Fun ("x", Sub (Id "x", Num 11)),
-    App (Id "f", App (Id "f", Num 77))
-  )
+      "f",
+      Fun ("x", Sub (Id "x", Num 11)),
+      App (Id "f", App (Id "f", Num 77))
+    )
 
   (* (proc (f) (f (f 77)) proc (x) -(x, 11)) ==> Int 55 *)
   let exp2 = Let (
-    "f",
-    Fun ("f", App (Id "f", App (Id "f", Num 77))),
-    Let (
-      "g",
-      Fun (("x", Sub (Id "x", Num 11))),
-      App (Id "f", Id "g")
+      "f",
+      Fun ("f", App (Id "f", App (Id "f", Num 77))),
+      Let (
+        "g",
+        Fun (("x", Sub (Id "x", Num 11))),
+        App (Id "f", Id "g")
+      )
     )
-  )
 
   let env0 = Env.empty_env
 
