@@ -120,30 +120,23 @@ end = struct
     in
 
     match exp with
-    | Num n ->
-      Int n
+    | Num n -> Int n
 
-    | Boolean x ->
-      Bool x
+    | Boolean x -> Bool x
 
-    | Id i ->
-      Env.apply_env i env
+    | Id i -> Env.apply_env i env
 
     | IsZero x ->
       let i = int_of_val (eval x env) in
       if i = 0 then Bool true else Bool false
 
-    | Add (e1, e2) ->
-      int_binary_op e1 e2 env ( + )
+    | Add (e1, e2) -> int_binary_op e1 e2 env ( + )
 
-    | Sub (e1, e2) ->
-      int_binary_op e1 e2 env ( - )
+    | Sub (e1, e2) -> int_binary_op e1 e2 env ( - )
 
-    | Mul (e1, e2) ->
-      int_binary_op e1 e2 env ( * )
+    | Mul (e1, e2) -> int_binary_op e1 e2 env ( * )
 
-    | Div (e1, e2) ->
-      int_binary_op e1 e2 env ( / )
+    | Div (e1, e2) -> int_binary_op e1 e2 env ( / )
 
     | If (pred, then_exp, else_exp) ->
       if (bool_of_val (eval pred env))
