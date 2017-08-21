@@ -37,7 +37,7 @@ end = struct
       match env with
       | [] -> None
       | (var', val') :: xs when var' = id -> Some val'
-      | x::xs -> search_var id xs
+      | x :: xs -> search_var id xs
 
     let search_var_exn id env =
       match search_var id env with
