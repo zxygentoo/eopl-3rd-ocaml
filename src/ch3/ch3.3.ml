@@ -62,7 +62,7 @@ end = struct
     | Div of exp * exp
     | If of exp * exp * exp
     | Let of id * exp * exp
-    | Fun of id * exp
+    | Abs of id * exp
     | App of exp * exp
 
   type value =
@@ -121,7 +121,7 @@ end = struct
       let new_env = Env.extend_env var var_value env in
       eval body new_env
 
-    | Fun (var, body) ->
+    | Abs (var, body) ->
       Fn (var, body, env)
 
     | App (rator, rand) ->
@@ -133,17 +133,17 @@ end = struct
     (* let f = proc (x) -(x,11) in (f (f 77)) ==> Int 55 *)
     let exp1 = Let (
         "f",
-        Fun ("x", Sub (Id "x", IntLit 11)),
+        Abs ("x", Sub (Id "x", IntLit 11)),
         App (Id "f", App (Id "f", IntLit 77))
       )
 
     (* (proc (f) (f (f 77)) proc (x) -(x, 11)) ==> Int 55 *)
     let exp2 = Let (
         "f",
-        Fun ("f", App (Id "f", App (Id "f", IntLit 77))),
+        Abs ("f", App (Id "f", App (Id "f", IntLit 77))),
         Let (
           "g",
-          Fun (("x", Sub (Id "x", IntLit 11))),
+          Abs (("x", Sub (Id "x", IntLit 11))),
           App (Id "f", Id "g")
         )
       )
