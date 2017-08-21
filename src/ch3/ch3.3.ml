@@ -30,9 +30,6 @@ end = struct
     let empty_env =
       []
 
-    let is_empty_env env =
-      env = []
-
     let extend_env id value env =
       (id, value) :: env
 
@@ -42,10 +39,12 @@ end = struct
       | (var', val') :: xs when var' = id -> Some val'
       | x::xs -> search_var id xs
 
-    let apply_env id env =
+    let search_var_exn id env =
       match search_var id env with
         | None -> failwith "empty env or has no binding for variable."
         | Some value -> value
+
+    let apply_env = search_var_exn
 
   end
 
