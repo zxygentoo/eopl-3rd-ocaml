@@ -1,4 +1,4 @@
-(* ch3.3 ProcLang: a letlang with function *)
+(* ch3.4 LetRecLang: a letlang with function *)
 
 module LetRecLang : sig
 
