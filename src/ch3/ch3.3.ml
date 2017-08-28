@@ -68,7 +68,7 @@ end = struct
   type value =
     | Int of int
     | Bool of bool
-    | Fn of id * exp * value Env.t
+    | Fn of id * exp
 
   let int_of_val =
     function
@@ -77,7 +77,7 @@ end = struct
 
   let fn_of_val =
     function
-    | Fn (var, body, env) -> var, body, env
+    | Fn (var, body) -> var, body
     | _ -> failwith "must be of type Fn."
 
   let rec eval exp env =
@@ -87,9 +87,15 @@ end = struct
       Int (op (int_of_val (ev e1)) (int_of_val (ev e2)))
     in
 
-    let apply fn arg =
+    (* let _apply fn arg =
       let var, body, saved_env = fn_of_val fn in
       let new_env = Env.extend_env var arg saved_env in
+      eval body new_env
+    in
+ *)
+    let apply fn arg =
+      let var, body = fn_of_val fn in
+      let new_env = Env.extend_env var arg env in
       eval body new_env
     in
 
@@ -122,7 +128,7 @@ end = struct
       eval body new_env
 
     | Abs (var, body) ->
-      Fn (var, body, env)
+      Fn (var, body)
 
     | App (rator, rand) ->
       apply (eval rator env) (eval rand env)
