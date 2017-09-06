@@ -73,7 +73,7 @@ end = struct
   let int_of_val =
     function
     | Int i -> i
-    | _ -> failwith "must be of type Int."    
+    | _ -> failwith "must be of type Int."
 
   let fn_of_val =
     function
@@ -160,7 +160,7 @@ end = struct
       Printf.printf "runing FunLang test...\n" ;
       begin
         (assert (eval exp1 env0 = Int 55)) ;
-        (assert (eval exp2 env0 = Int 55))    
+        (assert (eval exp2 env0 = Int 55))
       end
 
   end
