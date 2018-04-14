@@ -189,7 +189,7 @@ end = struct
     let env0 = Env.empty_env
 
     let run_tests () =
-      Printf.printf "runing FunLang test...\n" ;
+      Printf.printf "runing LetRecLang test...\n" ;
       begin
         (assert (eval exp1 env0 = Int 55)) ;
         (assert (eval exp2 env0 = Int 55)) ;
